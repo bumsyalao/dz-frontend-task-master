@@ -1,17 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { Product } from '@/types/app';
 
-export interface Product {
-  id: string;
-  name: string;
-  description: string;
-  images: string[];
-  price: {
-    amount: number;
-    currency: string;
-  };
-  categories: string[];
-}
 
 async function getProducts(category?: string): Promise<Product[]> {
   // Transform the category name (replace spaces with hyphens and lowercase it)

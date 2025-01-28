@@ -1,9 +1,10 @@
-// import { useCart } from '@/context/CartContext';
+import { useCart } from '@/app/(app)/context/CartContext';
+import getProductNameById from '@/app/(app)/helpers/getProductNameById';
 
 export default function CheckoutPage() {
   const { cart } = useCart();
 
-  const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+  const totalPrice = cart.reduce((total, item) => total + item.price.amount * (item.quantity || 0), 0);
 
   return (
     <div className="container mx-auto p-4">
@@ -15,9 +16,9 @@ export default function CheckoutPage() {
         <h2 className="text-xl font-semibold">Order Summary</h2>
         {cart.map((item) => (
           <div key={item.id} className="border p-4 rounded-lg mt-4">
-            <h3>{item.name}</h3>
+            <h3>Name: {getProductNameById(item.id)}</h3>
             <p>Quantity: {item.quantity}</p>
-            <p>Price: ${item.price * item.quantity}</p>
+            <p>Price: ${item.price.amount * (item.quantity || 0)}</p>
           </div>
         ))}
         <p className="text-xl font-semibold mt-4">Total: ${totalPrice}</p>

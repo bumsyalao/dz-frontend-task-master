@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { Product } from '../page';
+import { Product } from '@/types/app';
 
 export default async function ProductDetails({ params }: { params: { productId: string } }) {
   const res = await fetch(`http://localhost:3000/api/products/${params.productId}`);

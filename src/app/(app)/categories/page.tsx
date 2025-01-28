@@ -1,9 +1,5 @@
 import Link from 'next/link';
-
-export interface Category {
-  id: string;
-  name: string;
-}
+import { Category } from '@/types/app';
 
 async function getCategories(): Promise<Category[]> {
   const res = await fetch('http://localhost:3000/api/categories');

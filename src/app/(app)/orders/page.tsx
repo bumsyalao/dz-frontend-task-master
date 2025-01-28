@@ -1,21 +1,5 @@
-interface Order {
-  id: string;
-  status: string;
-  user: { id: string; name: string };
-  cart: {
-    tax: number;
-    subtotal: { amount: number; currency: string };
-    total: { amount: number; currency: string };
-    items: {
-      id: string;
-      referenceId: string;
-      type: string;
-      price: { amount: number; currency: string };
-      quantity: number;
-    }[];
-  };
-  timestamp: string;
-}
+import { Order } from '@/types/app';
+import getProductNameById from '@/app/(app)/helpers/getProductNameById';
 
 async function getOrders(): Promise<Order[]> {
   const res = await fetch('http://localhost:3000/api/orders');
@@ -40,7 +24,7 @@ async function getOrders(): Promise<Order[]> {
         quantity: item.quantity,
       })),
     },
-    timestamp: new Date(order.timestamp).toLocaleString(),
+    timestamp: order.timestamp ? new Date(order.timestamp).toLocaleString() : 'No Date Available',
   }));
 }
 
@@ -60,7 +44,9 @@ export default async function OrdersPage() {
           <h2 className="text-xl font-semibold">Order #{order.id}</h2>
           <p className="text-gray-600">Status: {order.status}</p>
           <p className="text-gray-600">User: {order.user.name} (ID: {order.user.id})</p>
-          <p className="text-gray-600">Date: {order.timestamp}</p>
+          <p className="text-gray-600">
+            Date: {order.timestamp ? new Date(order.timestamp).toLocaleString() : 'No Date Available'}
+          </p>
           <p className="text-gray-600">Subtotal: {order.cart.subtotal.currency} {order.cart.subtotal.amount.toFixed(2)}</p>
           <p className="text-gray-600">Tax: {order.cart.tax * 100}%</p>
           <p className="text-gray-600">Total: {order.cart.total.currency} {order.cart.total.amount.toFixed(2)}</p>
@@ -68,7 +54,7 @@ export default async function OrdersPage() {
             {order.cart.items?.map((item) => (
               <div key={item.id} className="border p-2 rounded-lg mb-2">
                 <p>Item ID: {item.id}</p>
-                <p>Reference ID: {item.referenceId}</p>
+                <p>Name: {getProductNameById(item.referenceId)}</p>
                 <p>Type: {item.type}</p>
                 <p>Quantity: {item.quantity}</p>
                 <p>Price: {item.price.currency} {item.price.amount.toFixed(2)}</p>
