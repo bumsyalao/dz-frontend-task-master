@@ -1,3 +1,5 @@
+"use client";
+
 import ProductsPage from '@/app/(app)/products/page';
 import getCategoryNameById from '@/app/(app)/helpers/getCategoryNameById';
 
