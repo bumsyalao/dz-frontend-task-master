@@ -1,3 +1,5 @@
+"use client";
+
 import { Order } from '@/types/app';
 import getProductNameById from '@/app/(app)/helpers/getProductNameById';
 

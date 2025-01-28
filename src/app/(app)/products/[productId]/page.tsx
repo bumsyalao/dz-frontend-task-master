@@ -1,40 +1,22 @@
-"use client"; 
+"use client";
 
-import { useEffect, useState } from 'react';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { Product } from '@/types/app';
+import { useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/app/(app)/context/CartContext';
+import { useProductDetail } from '@/hooks/useProducts';
 
 export default function ProductDetails({ params }: { params: { productId: string } }) {
   const { addToCart } = useCart();
-  const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const memoizedProductId = useMemo(() => params.productId, [params.productId]);
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const res = await fetch(`http://localhost:3000/api/products/${params.productId}`);
-        if (!res.ok) {
-          notFound();
-          return;
-        }
-        const data = await res.json();
-        setProduct(data.data);
-      } catch (error) {
-        console.error('Error fetching product:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProduct();
-  }, [params.productId]); // Trigger refetch when productId changes
+  const { product, loading } = useProductDetail(memoizedProductId);
 
   if (loading) return <div>Loading...</div>;
-
-  if (!product) return <div>Product not found</div>;
+  if (!product) {
+    notFound();
+  }
 
   return (
     <div className="container mx-auto p-4">

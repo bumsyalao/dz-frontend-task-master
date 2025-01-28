@@ -1,22 +1,13 @@
+"use client";
+
+import { useCategories } from '@/hooks/useCategories';
 import Link from 'next/link';
-import { Category } from '@/types/app';
 
-async function getCategories(): Promise<Category[]> {
-  const res = await fetch('http://localhost:3000/api/categories');
-  if (!res.ok) {
-    throw new Error('Failed to fetch categories');
-  }
-  const data = await res.json();
-  return data.data;
-}
+export default function CategoriesPage() {
+  const { categories, loading, error } = useCategories();
 
-export default async function CategoriesPage() {
-  let categories: Category[] = [];
-  try {
-    categories = await getCategories();
-  } catch (error) {
-    console.error('Error fetching categories:', error);
-  }
+  if (loading) return <div>Loading categories...</div>;
+  if (error) return <div className="text-red-500">{error}</div>;
 
   return (
     <div className="container mx-auto p-4">
@@ -35,7 +26,7 @@ export default async function CategoriesPage() {
           ))}
         </ul>
       ) : (
-        <p className="text-red-500">Failed to load categories. Please try again later.</p>
+        <p className="text-red-500">No categories available.</p>
       )}
     </div>
   );

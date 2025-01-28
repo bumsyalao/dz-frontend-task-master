@@ -43,7 +43,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
               : item
           );
         }
-
+  
         return [
           ...prev,
           {
@@ -55,9 +55,9 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
           },
         ];
       });
-    }, 300), // Debounce by 300ms
-    [] // Empty dependencies to memoize function
-  );
+    }, 300),
+    [] // This ensures the debounce is only initialized once
+  );  
 
   // Add to cart handler
   const addToCart = (product: Product) => {
