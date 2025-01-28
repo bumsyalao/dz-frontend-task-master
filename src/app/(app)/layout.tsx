@@ -1,8 +1,13 @@
-// if any changes are needed fo app layout, they should be made here
-export default function AppLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return children;
+import { CartProvider } from '@/app/(app)/context/CartContext';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        <CartProvider>
+          {children}
+          </CartProvider>
+      </body>
+    </html>
+  );
 }
