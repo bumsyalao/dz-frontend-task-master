@@ -7,29 +7,31 @@ export default function CheckoutPage() {
   const { cart } = useCart();
   const [productNames, setProductNames] = useState<{ [key: string]: string }>({});
 
-  // fetch name of the products
+  // Fetch the names of products in the cart using an API call
   const fetchProductNames = async () => {
     const newNames: { [key: string]: string } = {};
     for (let item of cart) {
       try {
+        // Fetch the product details by item ID
         const res = await fetch(`http://localhost:3000/api/products/${item.id}`);
         if (!res.ok) {
           throw new Error(`Failed to fetch product ${item.id}`);
         }
         const data = await res.json();
-        newNames[item.id] = data.data.name;
+        newNames[item.id] = data.data.name; // Store the name of the product
       } catch (error) {
         console.error("Error fetching product names", error);
       }
     }
-    setProductNames(newNames);
+    setProductNames(newNames); // Update state with the fetched product names
   };
 
   useEffect(() => {
+    // Trigger fetchProductNames if there are items in the cart
     if (cart.length > 0) {
       fetchProductNames();
     }
-  }, [cart]);
+  }, [cart]); // Re-run when cart content changes
 
   const [formData, setFormData] = useState({
     name: "",
@@ -42,16 +44,18 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Calculate the total price of the items in the cart
   const total = cart.reduce((sum, item) => sum + item.price.amount * (item.quantity || 1), 0);
 
-  // Handle form input changes
+  // Handle form input changes to update state
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle form submission and trigger API call
+  // Handle order placement upon form submission
   const handleOrderPlacement = () => {
+    // Ensure all form fields are filled
     if (!formData.name || !formData.address || !formData.city || !formData.postalCode || !formData.country) {
       alert("Please fill out all shipping information.");
       return;
@@ -60,19 +64,20 @@ export default function CheckoutPage() {
     setLoading(true);
     setError(null);
 
-    // Map cart items to match the expected "products" format in the API
+    // Map cart items to the format required by the API
     const products = cart.map(item => ({
       id: item.id,
       quantity: item.quantity || 1,
       price: item.price.amount,
     }));
 
-    // Prepare order data
+    // Prepare the order data to be sent to the API
     const orderData = {
       user: { name: formData.name, address: formData.address, city: formData.city, postalCode: formData.postalCode, country: formData.country },
       products: products,
     };
 
+    // Send a POST request to place the order
     fetch("http://localhost:3000/api/checkout", {
       method: "POST",
       headers: {
@@ -87,19 +92,19 @@ export default function CheckoutPage() {
         return res.json();
       })
       .then(() => {
-        localStorage.removeItem("cart");
-        setOrderPlaced(true);
+        localStorage.removeItem("cart"); // Clear the cart after successful order
+        setOrderPlaced(true); // Set the order as placed
       })
       .catch((error) => {
         console.error("Error placing order:", error);
         setError("An error occurred while placing your order. Please try again later.");
       })
       .finally(() => {
-        setLoading(false);
+        setLoading(false); // Stop loading state
       });
   };
 
-
+  // If the order is placed successfully, show the confirmation message
   if (orderPlaced) {
     return (
       <div className="container mx-auto p-4 text-center">

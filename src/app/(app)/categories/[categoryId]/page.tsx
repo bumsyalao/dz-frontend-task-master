@@ -1,11 +1,12 @@
 "use client";
 
-import ProductsPage from '@/app/(app)/products/page';
-import getCategoryNameById from '@/app/(app)/helpers/getCategoryNameById';
+import ProductsPage from "@/app/(app)/products/page";
+import getCategoryNameById from "@/app/(app)/helpers/getCategoryNameById";
 
 export default async function CategoryPage({ params }: { params: { categoryId: string } }) {
-  const categoryName = await getCategoryNameById(params.categoryId); // Resolve category name from ID
+  // Fetch the category name using the provided category ID
+  const categoryName = await getCategoryNameById(params.categoryId);
 
-  // Pass category name to ProductsPage as a search parameter
+  // Render the ProductsPage component with the retrieved category name as a search parameter
   return <ProductsPage searchParams={{ category: categoryName }} />;
 }

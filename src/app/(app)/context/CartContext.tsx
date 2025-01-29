@@ -43,7 +43,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
               : item
           );
         }
-  
+
         return [
           ...prev,
           {
@@ -57,7 +57,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       });
     }, 300),
     [] // This ensures the debounce is only initialized once
-  );  
+  );
 
   // Add to cart handler
   const addToCart = (product: Product) => {
@@ -65,10 +65,12 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     alert('Added to cart');
   };
 
+  //Remove item from cart
   const removeFromCart = (id: string) => {
     setCart((prev) => prev.filter((item) => item.id !== id));
   };
 
+  //Update item quantiity
   const updateQuantity = (id: string, quantity: number) => {
     setCart((prev) =>
       prev.map((item) => (item.id === id ? { ...item, quantity } : item))
