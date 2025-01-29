@@ -78,8 +78,8 @@ This structure follows Next.js conventions, with each route representing a featu
 ### Steps:
 1. Clone the repository:
    ```sh
-   git clone <repo-url>
-   cd <repo-directory>
+   git clone git@github.com:bumsyalao/dz-frontend-task-master.git
+   cd dz-frontend-task-master
    ```
 2. Install dependencies:
    ```sh
